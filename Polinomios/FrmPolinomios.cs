@@ -47,6 +47,11 @@ namespace Polinomios
                         pR = Polinomio.Multiplicar(p1, p2);
                         pR.Mostrar(lblPolinomioR);
                         break;
+                    case 3:
+                        var (cociente, residuo) = Polinomio.Dividir(p1, p2);
+                        cociente.Mostrar(lblPolinomioR);
+                        residuo.Mostrar(lblPolinomioRR);
+                        break;
                     case 4:
                         switch(cmbPolinomio.SelectedIndex){
                             case 0:
@@ -59,6 +64,7 @@ namespace Polinomios
                                 break;
                         }
                         break;
+                    
                 }
             }
         }

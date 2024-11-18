@@ -1,4 +1,6 @@
-﻿namespace Polinomios
+﻿using Polinomios;
+
+namespace Polinomios
 {
     public class Polinomio
     {
@@ -8,6 +10,11 @@
         public Polinomio()
         {
             Cabeza = null;
+        }
+
+        public Polinomio(Monomio cabeza)
+        {
+            Cabeza = cabeza;
         }
 
         public Monomio GetCabeza()
@@ -139,8 +146,8 @@
             {
                 if (apuntador.Exponente != 0)
                 {
-                    Monomio m = new Monomio(apuntador.Coeficiente*apuntador.Exponente,
-                                            apuntador.Exponente-1);
+                    Monomio m = new Monomio(apuntador.Coeficiente * apuntador.Exponente,
+                                            apuntador.Exponente - 1);
                     pR.Agregar(m);
                 }
                 apuntador = apuntador.Siguiente;
@@ -251,6 +258,109 @@
             return pR;
         }
 
+        public static (Polinomio Cociente, Polinomio Residuo) Dividir(Polinomio dividendo, Polinomio divisor)
+        {
+            Polinomio cociente = new Polinomio();
+            Polinomio residuo = new Polinomio();
 
+            Monomio apuntadorResiduo = dividendo.GetCabeza();
+            while (apuntadorResiduo != null)
+            {
+                residuo.Agregar(new Monomio(apuntadorResiduo.Coeficiente, apuntadorResiduo.Exponente));
+                apuntadorResiduo = apuntadorResiduo.Siguiente;
+            }
+
+            // Obtener el mayor término del divisor
+            Monomio divisorMayor = ObtenerMayorMonomio(divisor);
+            if (divisorMayor == null)
+            {
+                MessageBox.Show("El divisor no puede ser un polinomio vacío.");
+            }
+
+            Monomio terminoCociente;
+            Polinomio producto;
+
+            // Realizar la división mientras el residuo tenga términos y el mayor exponente del residuo sea >= al del divisor
+            while (residuo.GetCabeza() != null && ObtenerMayorMonomio(residuo).Exponente >= divisorMayor.Exponente)
+            {
+                // Obtener el mayor término del residuo
+                Monomio residuoMayor = ObtenerMayorMonomio(residuo);
+
+                MessageBox.Show($"{residuoMayor.Coeficiente} ^ {residuoMayor.Exponente} dividido {divisorMayor.Coeficiente} ^ {divisorMayor.Exponente}");
+
+                // Dividir el mayor término del residuo por el mayor término del divisor
+                double coeficienteCociente = residuoMayor.Coeficiente / divisorMayor.Coeficiente;
+                int exponenteCociente = residuoMayor.Exponente - divisorMayor.Exponente;
+                terminoCociente = new Monomio(coeficienteCociente, exponenteCociente);
+
+                // Agregar el término cociente al polinomio cociente
+                cociente.Agregar(terminoCociente);
+
+
+                // Multiplicar el término cociente por el divisor completo
+                Polinomio nuevo = new Polinomio();
+                nuevo.Agregar(terminoCociente);
+                MessageBox.Show($"Va a multiuplicar {nuevo.GetCabeza().Coeficiente} ^ {nuevo.GetCabeza().Exponente} (que es lo mismo que {terminoCociente.Coeficiente} ^ {terminoCociente.Exponente}) por {ObtenerMayorMonomio(divisor).Coeficiente} ^ {ObtenerMayorMonomio(divisor).Exponente}");
+                producto = Multiplicar(nuevo, divisor);
+
+                MessageBox.Show($"divide {residuoMayor.Coeficiente} ^ {residuoMayor.Exponente} por {cociente.GetCabeza().Coeficiente} ^ {cociente.GetCabeza().Exponente}, y el producto mayor es {ObtenerMayorMonomio(producto).Coeficiente} ^ {ObtenerMayorMonomio(producto).Exponente}");
+
+                // Restar el producto al residuo
+                residuo = Restar(residuo, producto);
+
+                MessageBox.Show($"nuevo residuo mayor {ObtenerMayorMonomio(residuo).Coeficiente} ^ {ObtenerMayorMonomio(residuo).Exponente}");
+            }
+
+            return (cociente, residuo);
+        }
+
+        private static Monomio ObtenerMayorMonomio(Polinomio polinomio)
+        {
+            Monomio apuntador = polinomio.GetCabeza();
+            if (apuntador == null) return null;
+
+
+            while (apuntador.Siguiente != null)
+            {
+                apuntador = apuntador.Siguiente;
+            }
+
+            return apuntador;
+        }
     }
 }
+
+
+
+
+
+//Monomio apuntadorResiduo = dividendo.GetCabeza();
+//while (apuntadorResiduo != null)
+//{
+//    residuo.Agregar(new Monomio(apuntadorResiduo.Coeficiente, apuntadorResiduo.Exponente));
+//    apuntadorResiduo = apuntadorResiduo.Siguiente;
+//}
+
+//Monomio divisorFinal = ObtenerUltimoMonomio(divisor);
+
+//if (divisorFinal == null)
+//{
+//    throw new ArgumentException("El divisor no puede ser un polinomio vacío.");
+//}
+
+//while (residuo.GetCabeza() != null && ObtenerUltimoMonomio(residuo).Exponente >= divisorFinal.Exponente)
+//{
+//    Monomio residuoFinal = ObtenerUltimoMonomio(residuo);
+
+//    double coeficienteCociente = residuoFinal.Coeficiente / divisorFinal.Coeficiente;
+//    int exponenteCociente = residuoFinal.Exponente - divisorFinal.Exponente;
+//    Monomio terminoCociente = new Monomio(coeficienteCociente, exponenteCociente);
+
+//    cociente.Agregar(terminoCociente);
+
+//    Polinomio producto = Multiplicar(new Polinomio { Cabeza = terminoCociente }, divisor);
+
+//    residuo = Restar(residuo, producto);
+//}
+
+//return (cociente, residuo);
