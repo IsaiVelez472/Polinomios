@@ -42,7 +42,6 @@
             cmbOperacion = new ComboBox();
             btnLimpiar = new Button();
             lblPolinomioRR = new Label();
-            lblPolinomioTemp = new Label();
             SuspendLayout();
             // 
             // label1
@@ -167,20 +166,11 @@
             lblPolinomioRR.Size = new Size(797, 86);
             lblPolinomioRR.TabIndex = 13;
             // 
-            // lblPolinomioTemp
-            // 
-            lblPolinomioTemp.BackColor = Color.Khaki;
-            lblPolinomioTemp.Location = new Point(-1, 558);
-            lblPolinomioTemp.Name = "lblPolinomioTemp";
-            lblPolinomioTemp.Size = new Size(797, 86);
-            lblPolinomioTemp.TabIndex = 14;
-            // 
             // FrmPolinomios
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 703);
-            Controls.Add(lblPolinomioTemp);
             Controls.Add(lblPolinomioRR);
             Controls.Add(btnLimpiar);
             Controls.Add(cmbOperacion);
